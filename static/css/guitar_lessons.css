@@ -1,0 +1,27 @@
+.divider-vertical {
+    height: 50px;
+    margin: 0 9px;
+    border-left: 1px solid #F2F2F2;
+    border-right: 1px solid #FFF;
+}
+.panel-default > .panel-heading-custom {
+  background-image: none;
+  background-color: #ff9e9e;
+  color: #aa0000;
+}
+
+.jumbotron > .jumbotron-background-color {
+  background-color: #C9B5B4;
+  color: #ffffff;
+}
+
+.main-header-custom {
+  color: #1D4F68;
+  font-weight: 900;
+}
+
+.header-custom {
+  color: #195370;
+  font-weight: bold;
+}
+
