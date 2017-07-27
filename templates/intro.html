@@ -65,12 +65,28 @@
       <br />
       <div class="jumbotron alert alert-info">
 
+      {{if .Message }}
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="container">
+              {{if .Error}}
+            <div class="alert alert-warning">
+              {{else}}
+            <div class="alert alert-info">
+              {{end}}
+                <p class="lead">{{.Message}}</p>
+            </div>
+          </div>            
+        </div>
+      </div>
+      {{end}}
+          
       <div class="row">
         <div class="col-lg-12">
           <div class="container">
             <div class="jumbotron">
                 <h1 style="color: #1D4F68;font-weight: 800;">St Albans Guitar Tuition</h1>
-                <p class="lead">Guitar Lessons, Artist development, Aural Lessons, Ensemble Coaching, Theory Lessons, Composition Lessons, Jazz Improvisation Lessons, NCEA Music Tutoring, Skype Lessons.</p>
+                <p class="lead">Guitar Lessons, Aural Lessons, Theory Lessons, Composition Lessons, Jazz Improvisation Lessons, Skype Lessons.</p>
             </div>
           </div>            
         </div>
@@ -95,8 +111,8 @@
           <h2 class="header-custom">Essential information</h2>
           <p>
             <ul>
-              <li><span class="header-custom">Pricing:</span> £60 per hour, £30 per half hour</li>
-              <li><span class="header-custom">Styles:</span> Pop, Rock, Jazz, Fingerstyle, Folk, Latin, Blues</li>
+              <li><span class="header-custom">Pricing:</span> £24 per hour, £12 per half hour</li>
+              <li><span class="header-custom">Styles:</span> Pop, Rock, Jazz, Folk, Latin, Blues</li>
               <li><span class="header-custom">Suitability:</span> All ages, beginner to advanced</li>
             </ul>
           </p>
@@ -105,12 +121,11 @@
           <br />
           <h2 class="header-custom">Bio</h2>
 
-          <p class="text-info"> Lucien is a qualified musician (BMusHons) working as a professional teacher, performer and composer in St Albans, Great Britain. He works as a performer in numerous bands including various jazz ensembles, original and cover pop music groups, Celtic and folk music ensembles as well as playing solo guitar concerts and gigs. Having been taught by some of Great Britain’s finest guitarists including, Graham Wardrop, Harry Harrison, Bob Heinz, Andy Genge and Dixon Nacey, as well as international guitarists Gilad Hekselman and Jesse van Ruller, Lucien has an excellent knowledge of many guitar styles and techniques.</p> 
+          <p class="text-info"> I am an experienced musician, having performed ..... Having studied with internationally
+acclaimed musicians such as Jesse Van Ruller and Dick Oatts. I have an excellent grasp of many guitar styles and techniques.</p> 
             
-          <p class="text-info">While at Secondary School, Lucien successfully completed NCEA Music up to Level 3 (year 13), with performance up to NCEA Level 5. He is familiar with the current NCEA Music Curriculum in Secondary School education and is equip to give advice and tutoring in this area.</p>
+          <p class="text-info">I have a versatile teaching style, that allows you to learn at your own pace in order to achieve your musical goals, whatever they may be. Whether you would like to learn to play your favourite songs, develop the skills necessary to play in a band, explore a different musical style, or ...</p>
           
-          <p class="text-info">Lucien has 4 years of teaching experience including private teaching, itinerant teaching at high schools and a contract with the St Albans School of Music. He currently conducts her teaching from a studio at The Piano Centre for Music and the Arts in St Albans.</p>
-
           <div id="lessons"></div>
           <br />
           <br />
@@ -139,22 +154,25 @@
         <div class="col-lg-4">
           <h2 class="header-custom">Contact</h2>
 
-             <form id="contact_form2" action="/contact" method="post">
+            <p class="text-info">Please give me an initial idea about your requirements so that lessons can be tailored to your needs
+            from the very beginning. We shall discuss these further.</p>
+
+             <form id="contact_form" action="/contact" method="post">
               <div class="form-group">
                 <label for="first_name">First name:</label>
-                <input type="text" class="form-control" id="first_name2">
+                <input type="text" class="form-control" id="first_name" name="first_name" required="true" maxlength="20">
               </div>
               <div class="form-group">
                 <label for="pwd">Last name:</label>
-                <input type="text" class="form-control" id="last_name2">
+                <input type="text" class="form-control" id="last_name" name="last_name" required="true" maxlength="30">
               </div>
               <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email2">
+                <input type="email" class="form-control" id="email" name="email" required="true" maxlength="40">
               </div>
               <div class="form-group">
                 <label for="note">Note (optional):</label>
-                <input type="textarea" class="form-control" id="note2">
+                <textarea class="form-control" id="note" name="note" rows="5" maxlength="500"></textarea>
               </div>
               <div class="form-group">
                 <button type="submit" class="btn btn-default">Submit</button>
