@@ -75,10 +75,9 @@ func main() {
 		if err != nil {
 			log.Println(err)
 
-			//error := IntroData{err.Error(), true}
-			//t.templ.Execute(w, error)
-
-			fmt.Fprintln(w, "{Message:\"There was a problem with the form. Can you, please, try again.\",Error:  true}")
+			successMsg := IntroData{Message: "Form was not successfully submitted. Please try again.", Error: true}
+			jsonData, _ := json.Marshal(successMsg)
+			w.Write(jsonData)
 
 			return
 		}
@@ -96,7 +95,7 @@ func main() {
 
 		fmt.Printf("\t\tForm data : firstName=%s, lastName=%s,email=%s,note=%s\n", firstName, lastName, email, note)
 
-		subject := fmt.Sprintf("Guitar lessons interest (%s %s)", firstName, lastName)
+		subject := fmt.Sprintf("Guitar lessons interest (%s %s - %s)", firstName, lastName, email)
 
 		message := "First name: %s \r\nLast name: %s \r\n\r\nEmail: %s \r\n\r\nNote: %s\r\n"
 		emailBody := fmt.Sprintf(message, firstName, lastName, email, note)
@@ -117,8 +116,6 @@ func main() {
 			emailMessage += fmt.Sprintf("%s: %s\r\n", k, v)
 		}
 		emailMessage += "\r\n" + emailBody
-
-		// store in database
 
 		// send an email about the contact
 		auth := smtp.PlainAuth("", "xxxxx@btinternet.com", emailPass, "mail.btinternet.com")
@@ -174,26 +171,19 @@ func main() {
 
 		c.Quit()
 
+		// TODO: store in database
+
 		// show the successful message
 		w.Header().Set("Content-Type", "application/json")
 
 		successMsg := IntroData{Message: "Thank you. Form was successfully submitted. I shall contact you shortly.", Error: false}
-
-		//json.NewEncoder(w).Encode(successMsg)
 		jsonData, err := json.Marshal(successMsg)
+
 		if err != nil {
 			fmt.Printf("contact handler error: %v \n\n", err)
 		}
 		w.Write(jsonData)
 
-		/*
-			//fmt.Fprintln(w, successMsg)
-			//fmt.Fprintln(w, "{'Message':'Thank you. Form was successfully submitted. I shall contact you shortly.','Error':'false'}")
-			_, err = w.Write([]byte("{'Message':'Thank you. Form was successfully submitted. I shall contact you shortly.','Error':'false'}"))
-			if err != nil {
-				fmt.Printf("contact handler error: %v \n\n", err)
-			}
-		*/
 	})
 
 	// ------- WEB SERVER -------
