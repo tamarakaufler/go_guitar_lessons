@@ -18,7 +18,9 @@
 
       <!-- Optional theme -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-      
+
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.2.3/jquery-confirm.min.css">
+
       <!-- Custom styles for this template -->
       <link href="/static/css/guitar_lessons.css" rel="stylesheet">
 
@@ -29,12 +31,12 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body style="background-color: #03213d">
 
-    <div class="container">
+    <div id="spinner" style="display: none;"> </div>  
 
-      <!-- The justified navigation menu is meant for single line per list item.
-           Multiple lines will require custom code not provided by Bootstrap. -->
+    <div id="main" class="container">     
+
       <div class="masthead">
 
         <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -46,11 +48,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="#">St Albans Guitar Lessons</a>
+              <a class="navbar-brand" href="#"><span class="navbar-brand-font">St Albans Guitar Lessons</span></a>
             </div>
 
             <ul class="nav nav-justified">
-              <li class="active"><a href="/">Home</a></li>
+              <li class="active"><a href="#">Home</a></li>
               <li><a href="#aboutme">About me</a></li>
               <li><a href="#lessons">Lessons</a></li>
               <li><a href="#contact">Contact</a></li>
@@ -64,22 +66,6 @@
       <br />
       <br />
       <div class="jumbotron alert alert-info">
-
-      {{if .Message }}
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="container">
-              {{if .Error}}
-            <div class="alert alert-warning">
-              {{else}}
-            <div class="alert alert-info">
-              {{end}}
-                <p class="lead">{{.Message}}</p>
-            </div>
-          </div>            
-        </div>
-      </div>
-      {{end}}
           
       <div class="row">
         <div class="col-lg-12">
@@ -157,7 +143,7 @@ acclaimed musicians such as Jesse Van Ruller and Dick Oatts. I have an excellent
             <p class="text-info">Please give me an initial idea about your requirements so that lessons can be tailored to your needs
             from the very beginning. We shall discuss these further.</p>
 
-             <form id="contact_form" action="/contact" method="post">
+             <form id="contact_form" name="contact_form" method="post">
               <div class="form-group">
                 <label for="first_name">First name:</label>
                 <input type="text" class="form-control" id="first_name" name="first_name" required="true" maxlength="20">
@@ -175,7 +161,7 @@ acclaimed musicians such as Jesse Van Ruller and Dick Oatts. I have an excellent
                 <textarea class="form-control" id="note" name="note" rows="5" maxlength="500"></textarea>
               </div>
               <div class="form-group">
-                <button type="submit" class="btn btn-default">Submit</button>
+                <button type="submit" class="btn btn-default" id="contact_submit">Submit</button>
               </div>
               <!-- button class="btn btn-default g-recaptcha" data-sitekey="" data-callback="captchaSubmit" data-badge="inline">Submit</button -->
               <br />
@@ -202,9 +188,17 @@ acclaimed musicians such as Jesse Van Ruller and Dick Oatts. I have an excellent
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script
+          src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+          integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+          crossorigin="anonymous"></script>
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.2.3/jquery-confirm.min.js"></script>        
+
+        <script src="/static/js/guitar_lessons.js"></script>
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>

@@ -1,18 +1,21 @@
-.divider-vertical {
-    height: 50px;
-    margin: 0 9px;
-    border-left: 1px solid #F2F2F2;
-    border-right: 1px solid #FFF;
-}
-.panel-default > .panel-heading-custom {
-  background-image: none;
-  background-color: #ff9e9e;
-  color: #aa0000;
-}
-
 .jumbotron > .jumbotron-background-color {
   background-color: #C9B5B4;
   color: #ffffff;
+}
+
+.navbar a {
+    color: #d5ebf6;
+}
+
+.navbar-brand-font {
+    color: #acdcf4;
+    font-weight: 500;
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+    color: #03213d;
+    background-color: #eeeeee;
 }
 
 .main-header-custom {
@@ -25,3 +28,58 @@
   font-weight: bold;
 }
 
+.message-header {
+  color: #03213d;
+  font-weight: bold;
+}
+
+.message-success-text {
+  color: #03213d;
+}
+.message-error-text {
+  color: #d85d5d;
+}
+
+/* ================================ */
+/* Center the spinner */
+
+#spinner {
+  position: absolute;
+  left: 50%;
+  top: 170%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  border-bottom: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  background-color: #C9B5B4;
+}
+
+
+.spinner {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid blue;
+  border-bottom: 16px solid blue;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

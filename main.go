@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -62,6 +63,8 @@ func main() {
 
 	http.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
 
+		fmt.Println("in contact handler")
+
 		t := templateHandler{filename: "intro.html"}
 
 		t.once.Do(func() {
@@ -72,8 +75,10 @@ func main() {
 		if err != nil {
 			log.Println(err)
 
-			error := IntroData{err.Error(), true}
-			t.templ.Execute(w, error)
+			//error := IntroData{err.Error(), true}
+			//t.templ.Execute(w, error)
+
+			fmt.Fprintln(w, "{Message:\"There was a problem with the form. Can you, please, try again.\",Error:  true}")
 
 			return
 		}
@@ -81,7 +86,7 @@ func main() {
 		email := r.PostFormValue("email")
 
 		if email == "" {
-			t.templ.Execute(w, nil)
+			http.Redirect(w, r, "/", 301)
 			return
 		}
 
@@ -170,9 +175,25 @@ func main() {
 		c.Quit()
 
 		// show the successful message
-		successMsg := IntroData{"Thank you. Form was successfully submitted. I shall contact you shortly.", false}
+		w.Header().Set("Content-Type", "application/json")
 
-		t.templ.Execute(w, successMsg)
+		successMsg := IntroData{Message: "Thank you. Form was successfully submitted. I shall contact you shortly.", Error: false}
+
+		//json.NewEncoder(w).Encode(successMsg)
+		jsonData, err := json.Marshal(successMsg)
+		if err != nil {
+			fmt.Printf("contact handler error: %v \n\n", err)
+		}
+		w.Write(jsonData)
+
+		/*
+			//fmt.Fprintln(w, successMsg)
+			//fmt.Fprintln(w, "{'Message':'Thank you. Form was successfully submitted. I shall contact you shortly.','Error':'false'}")
+			_, err = w.Write([]byte("{'Message':'Thank you. Form was successfully submitted. I shall contact you shortly.','Error':'false'}"))
+			if err != nil {
+				fmt.Printf("contact handler error: %v \n\n", err)
+			}
+		*/
 	})
 
 	// ------- WEB SERVER -------
