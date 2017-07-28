@@ -1,12 +1,12 @@
 $(document).ready(function(){
     
-    $("#loader").hide();
+    $("#spinner").hide();
 
     $("form").submit(function( event ){
 
         event.preventDefault();
 
-        $("#loader").show();
+        $("#spinner").show();
 
         $.ajax({
           type: "POST",
@@ -14,8 +14,7 @@ $(document).ready(function(){
           data: $("#contact_form").serialize(),
           dataType: 'json',
           success: function(data, textStatus) {
-                  $("#loader").hide();
-                  $("#main").show();
+                  $("#spinner").hide();
 
                   var is_error = data.Error;
 
@@ -32,8 +31,7 @@ $(document).ready(function(){
                   jquery_alert(message_title, message_text);
               },
           error: function(xhr, textStatus, errorThrown) {
-                  $("#loader").hide();
-                  $("#main").show();
+                  $("#spinner").hide();
                           
                 jquery_alert('<span class="">Error</span>',"<span class=\"\"> Form was not successfully submitted. Can you please try again.\n\n" + errorThrown + '</span>')
               }
