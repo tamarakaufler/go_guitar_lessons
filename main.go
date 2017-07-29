@@ -188,7 +188,7 @@ func main() {
 
 	// ------- WEB SERVER -------
 	fmt.Println("Starting web server ...")
-	if err := http.ListenAndServe("192.168.1.91:80", nil); err != nil {
+	if err := http.ListenAndServe(":80", nil); err != nil {
 		log.Fatal("Server problems: ", err)
 	}
 }
