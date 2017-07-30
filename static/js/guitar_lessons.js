@@ -29,16 +29,20 @@ $(document).ready(function(){
                   }
 
                   jquery_alert(message_title, message_text);
+
+                  grecaptcha.reset();
+                  document.getElementById("contact_form").reset();
               },
           error: function(xhr, textStatus, errorThrown) {
                   $("#gl_spinner").hide();
                           
-                jquery_alert('<span class="">Error</span>',"<span class=\"\"> Form was not successfully submitted. Can you please try again.\n\n" + errorThrown + '</span>')
+                  jquery_alert('<span class="">Error</span>',"<span class=\"\"> Form was not successfully submitted. Can you please try again.\n\n" + errorThrown + '</span>')
+
+                  grecaptcha.reset();
+                  document.getElementById("contact_form").reset();
               }
 
         });
-
-        document.getElementById("contact_form").reset();
 
     });
 
