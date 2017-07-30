@@ -30,7 +30,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <!-- script src='https://www.google.com/recaptcha/api.js'></script -->
   </head>
 
   <body style="background-color: #03213d">
@@ -161,9 +161,13 @@
                 <label for="note">Note (optional):</label>
                 <textarea class="form-control" id="note" name="note" rows="5" maxlength="500"></textarea>
               </div>
-              <!-- div class="form-group"">
-                 <div class="g-recaptcha" data-sitekey="6LdqBSsUAAAAAIYS0peewEmS4z5LYI_XTBK6F0yW"></div>
-              </div-->
+              <div class="form-group">
+                 <div class="g-recaptcha"
+                      data-sitekey="6LdqBSsUAAAAAIYS0peewEmS4z5LYI_XTBK6F0yW"
+                      data-callback="onSubmit"
+                      data-size="invisible">
+                </div>
+              </div>
               <div class="form-group">
                 <button type="submit" class="btn btn-default" id="contact_submit">Submit</button>
                 <!-- button type="submit" class="btn btn-default g-recaptcha" id="contact_submit" data-sitekey="6LdqBSsUAAAAAIYS0peewEmS4z5LYI_XTBK6F0yW" data-callback="onReCaptcha" data-badge="inline">Submit</button -->
@@ -202,7 +206,7 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.2.3/jquery-confirm.min.js"></script>
 
-        <!-- script src='https://www.google.com/recaptcha/api.js'></script-->
+        <script src='https://www.google.com/recaptcha/api.js'></script>
 
         <script src="/static/js/guitar_lessons.js"></script>
 

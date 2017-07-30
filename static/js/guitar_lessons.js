@@ -10,7 +10,7 @@ $(document).ready(function(){
 
         $.ajax({
           type: "POST",
-          url: "http://192.168.1.91/contact",
+          url: "/contact",
           data: $("#contact_form").serialize(),
           dataType: 'json',
           success: function(data, textStatus) {
