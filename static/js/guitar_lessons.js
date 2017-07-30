@@ -1,12 +1,12 @@
 $(document).ready(function(){
     
-    $("#spinner").hide();
+    $("#gl_spinner").hide();
 
     $("form").submit(function( event ){
 
         event.preventDefault();
 
-        $("#spinner").show();
+        $("#gl_spinner").show();
 
         $.ajax({
           type: "POST",
@@ -14,7 +14,7 @@ $(document).ready(function(){
           data: $("#contact_form").serialize(),
           dataType: 'json',
           success: function(data, textStatus) {
-                  $("#spinner").hide();
+                  $("#gl_spinner").hide();
 
                   var is_error = data.Error;
 
@@ -31,7 +31,7 @@ $(document).ready(function(){
                   jquery_alert(message_title, message_text);
               },
           error: function(xhr, textStatus, errorThrown) {
-                  $("#spinner").hide();
+                  $("#gl_spinner").hide();
                           
                 jquery_alert('<span class="">Error</span>',"<span class=\"\"> Form was not successfully submitted. Can you please try again.\n\n" + errorThrown + '</span>')
               }
@@ -45,7 +45,7 @@ $(document).ready(function(){
     function jquery_alert(title, content) {
         $.alert({
             title: title,
-            content: content,
+            content: content
         });
     }
 
