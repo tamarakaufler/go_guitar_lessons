@@ -52,5 +52,20 @@ $(document).ready(function(){
             content: content
         });
     }
-
 });
+
+function initMap() {
+
+    var housePos = {lat: 51.748, lng: -0.297};
+    var map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 12,
+      center: housePos
+    });
+
+    var marker = new google.maps.Marker({
+      position: housePos,
+      map: map
+    });
+
+}
+
