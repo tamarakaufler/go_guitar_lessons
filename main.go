@@ -18,7 +18,7 @@ import (
 var emailHost string = os.Getenv("SMTP_host")
 var emailPort string = os.Getenv("SMTP_port")
 var emailPass string = os.Getenv("SMTP_pass")
-var emailFrom string = "noreply@guitar-lessons-stalbans.co.uk"
+var emailFrom string = "noreply@guitar-lessons.co.uk"
 
 var emailRecipient string = "xxxxx@gmail.com"
 
