@@ -19,13 +19,15 @@ var emailHost string = os.Getenv("SMTP_host")
 var emailPort string = os.Getenv("SMTP_port")
 var emailPass string = os.Getenv("SMTP_pass")
 var emailFrom string = "noreply@guitar-lessons.co.uk"
+var reCaptchaKey string = os.Getenv("GOOGLE_RECAPTCHA_KEY")
+var gapiKey string = os.Getenv("GOOGLE_API_KEY")
 
 var emailRecipient string = "xxxxx@gmail.com"
 
 type templateHandler struct {
 	once     sync.Once
-	filename string
 	templ    *template.Template
+	filename string
 }
 
 type IntroData struct {
@@ -33,15 +35,31 @@ type IntroData struct {
 	Error   bool
 }
 
+type AuthData struct {
+	ReCaptchaKey string
+	GapiKey      string
+}
+
+var auth AuthData = AuthData{ReCaptchaKey: reCaptchaKey, GapiKey: gapiKey}
+
 func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
 	t.once.Do(func() {
 		t.templ = template.Must(template.ParseFiles(filepath.Join("templates", t.filename)))
 	})
 
-	t.templ.Execute(w, nil)
+	t.templ.Execute(w, auth)
 }
 
 func main() {
+
+	if reCaptchaKey == "" {
+		log.Fatal("ERROR: email authentication (password) must be supplied for GOOGLE_RECAPTCHA_KEY")
+	}
+
+	if gapiKey == "" {
+		log.Fatal("ERROR: email authentication (password) must be supplied for GOOGLE_API_KEY")
+	}
 
 	if emailPass == "" {
 		log.Fatal("ERROR: email authentication (password) must be supplied for SMTP BTInternet server and xxxxx@btinternet.com")
@@ -63,13 +81,6 @@ func main() {
 
 	http.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
 
-		fmt.Println("in contact handler")
-
-		t := templateHandler{filename: "intro.html"}
-
-		t.once.Do(func() {
-			t.templ = template.Must(template.ParseFiles(filepath.Join("templates", t.filename)))
-		})
 		err := r.ParseForm()
 
 		if err != nil {
