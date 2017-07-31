@@ -19,12 +19,11 @@ var emailHost string = os.Getenv("SMTP_host")
 var emailPort string = os.Getenv("SMTP_port")
 var emailPass string = os.Getenv("SMTP_pass")
 var emailFrom string = "noreply@guitar-lessons.co.uk"
+var emailRecipient string = "xxxxx@gmail.com"
 
 var reCaptchaKey string = os.Getenv("GOOGLE_RECAPTCHA_KEY")
 var reCaptchaSecret string = os.Getenv("GOOGLE_RECAPTCHA_SECRET")
 var gapiKey string = os.Getenv("GOOGLE_API_KEY")
-
-var emailRecipient string = "xxxxx@gmail.com"
 
 type templateHandler struct {
 	once     sync.Once
