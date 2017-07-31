@@ -19,7 +19,9 @@ var emailHost string = os.Getenv("SMTP_host")
 var emailPort string = os.Getenv("SMTP_port")
 var emailPass string = os.Getenv("SMTP_pass")
 var emailFrom string = "noreply@guitar-lessons.co.uk"
+
 var reCaptchaKey string = os.Getenv("GOOGLE_RECAPTCHA_KEY")
+var reCaptchaSecret string = os.Getenv("GOOGLE_RECAPTCHA_SECRET")
 var gapiKey string = os.Getenv("GOOGLE_API_KEY")
 
 var emailRecipient string = "xxxxx@gmail.com"
@@ -40,7 +42,8 @@ type AuthData struct {
 	GapiKey      string
 }
 
-var auth AuthData = AuthData{ReCaptchaKey: reCaptchaKey, GapiKey: gapiKey}
+var keyAuth = AuthData{ReCaptchaKey: reCaptchaKey, GapiKey: gapiKey}
+var recaptchaAuth = CaptchaAuth{Secret: reCaptchaSecret}
 
 func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
@@ -48,7 +51,7 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		t.templ = template.Must(template.ParseFiles(filepath.Join("templates", t.filename)))
 	})
 
-	t.templ.Execute(w, auth)
+	t.templ.Execute(w, keyAuth)
 }
 
 func main() {
@@ -80,6 +83,7 @@ func main() {
 	http.Handle("/", &templateHandler{filename: "intro.html"})
 
 	http.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 
 		err := r.ParseForm()
 
@@ -93,10 +97,32 @@ func main() {
 			return
 		}
 
+		fmt.Printf(">>> %+v\n\n", r.Form)
+
 		email := r.PostFormValue("email")
 
 		if email == "" {
-			http.Redirect(w, r, "/", 301)
+			failureMsg := IntroData{Message: "Redirect", Error: true}
+			jsonData, err := json.Marshal(failureMsg)
+
+			if err != nil {
+				fmt.Printf("contact handler error: %v \n\n", err)
+			}
+			w.Write(jsonData)
+			return
+		}
+
+		recaptchaToken := r.Form.Get("g-recaptcha-response")
+		isHuman, err := recaptchaAuth.Validate(recaptchaToken)
+		if err != nil || !isHuman {
+
+			failureMsg := IntroData{Message: "Redirect", Error: true}
+			jsonData, err := json.Marshal(failureMsg)
+
+			if err != nil {
+				fmt.Printf("contact handler error: %v \n\n", err)
+			}
+			w.Write(jsonData)
 			return
 		}
 
