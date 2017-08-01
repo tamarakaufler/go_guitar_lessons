@@ -39,6 +39,11 @@
   color: #d85d5d;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 /* ================================ */
 /* Center the spinner */
 #spinner {
