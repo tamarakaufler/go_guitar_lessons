@@ -12,7 +12,10 @@ contact information. The form is protected by captcha to avoid spamming.
 - email module
 - captcha module (Google reCaptcha v2)
 - javascript: jQuery
+- jQuery popup
+- spinner
 - CSS: Bootstrap
+- spinner
 - Google maps
 
 The sensitive information is not stored in the codebase, but provided on the command line, when
