@@ -31,7 +31,7 @@ starting the application.
 
 ## Usage
 
-1. change the email authentication detailsfirst:
+1. change the email authentication details
 2. change the email recipient
 3. go build -o guitar_lessons
 4. Optional: change the server port
