@@ -23,7 +23,7 @@ starting the application.
 
 ### Sensitive information
 
-- SMTP_pass (email password to be able to send emails)l
+- SMTP_pass (email password to be able to send emails)
 - GOOGLE_RECAPTCHA_KEY (allows using Google reCaptcha)
 - GOOGLE_RECAPTCHA_SECRET(allows using Google reCaptcha)
 - GOOGLE_API_KEY (allows using various Google APIs, including Google maps)  
