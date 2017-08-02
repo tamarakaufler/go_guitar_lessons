@@ -1,25 +1,23 @@
 package main
 
 import (
-	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
-	"net/mail"
-	"net/smtp"
 	"os"
 	"path/filepath"
-	"strings"
 	"sync"
 )
 
 var emailHost string = os.Getenv("SMTP_host")
 var emailPort string = os.Getenv("SMTP_port")
 var emailPass string = os.Getenv("SMTP_pass")
+
+var emailUser string = "xxxxx@btinternet.com"
 var emailFrom string = "noreply@guitar-lessons.co.uk"
-var emailRecipient string = "xxxxx@gmail.com"
+var emailTo string = "xxxxx@gmail.com"
 
 var reCaptchaKey string = os.Getenv("GOOGLE_RECAPTCHA_KEY")
 var reCaptchaSecret string = os.Getenv("GOOGLE_RECAPTCHA_SECRET")
@@ -55,6 +53,9 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
+	// Sanity checks
+	//----------------------------------------
+
 	if reCaptchaKey == "" {
 		log.Fatal("ERROR: email authentication (password) must be supplied for GOOGLE_RECAPTCHA_KEY")
 	}
@@ -72,35 +73,34 @@ func main() {
 	if emailPort == "" {
 		emailPort = "465"
 	}
-	emailServer := strings.Join([]string{emailHost, emailPort}, ":")
 
-	// static files
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
+	// Handlers
+	//----------------------------------------
 
 	// show the main page
 	http.Handle("/", &templateHandler{filename: "intro.html"})
 
+	// process form submission
 	http.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
-		err := r.ParseForm()
+		// Email server check
+		//----------------------------------------
 
+		email := &Email{}
+
+		err := email.Init(Auth{Host: emailHost, Port: emailPort, User: emailUser, Pass: emailPass})
 		if err != nil {
-			log.Println(err)
-
-			successMsg := IntroData{Message: "Form was not successfully submitted. Please try again.", Error: true}
-			jsonData, _ := json.Marshal(successMsg)
-			w.Write(jsonData)
-
+			log.Panic("Wrong email authorization: ", err.Error())
 			return
 		}
 
-		fmt.Printf(">>> %+v\n\n", r.Form)
+		e := r.FormValue("email")
 
-		email := r.PostFormValue("email")
-
-		if email == "" {
+		if e == "" {
 			failureMsg := IntroData{Message: "Redirect", Error: true}
 			jsonData, err := json.Marshal(failureMsg)
 
@@ -110,6 +110,9 @@ func main() {
 			w.Write(jsonData)
 			return
 		}
+
+		// reCaptcha validation
+		//----------------------------------------
 
 		recaptchaToken := r.Form.Get("g-recaptcha-response")
 		isHuman, err := recaptchaAuth.Validate(recaptchaToken)
@@ -125,92 +128,21 @@ func main() {
 			return
 		}
 
-		firstName := r.PostFormValue("first_name")
-		lastName := r.PostFormValue("last_name")
-		note := r.PostFormValue("note")
-
-		fmt.Printf("\t\tForm data : firstName=%s, lastName=%s,email=%s,note=%s\n", firstName, lastName, email, note)
-
-		subject := fmt.Sprintf("Guitar lessons interest (%s %s - %s)", firstName, lastName, email)
-
-		message := "First name: %s \r\nLast name: %s \r\n\r\nEmail: %s \r\n\r\nNote: %s\r\n"
-		emailBody := fmt.Sprintf(message, firstName, lastName, email, note)
-
-		from := mail.Address{"", emailFrom}
-		to1 := mail.Address{"", emailRecipient}
-		emailSubject := subject
-
-		// email headers
-		headers := make(map[string]string)
-		headers["From"] = from.String()
-		headers["To"] = to1.String()
-		headers["Subject"] = emailSubject
-
-		// Setup message
-		emailMessage := ""
-		for k, v := range headers {
-			emailMessage += fmt.Sprintf("%s: %s\r\n", k, v)
-		}
-		emailMessage += "\r\n" + emailBody
-
-		// send an email about the contact
-		auth := smtp.PlainAuth("", "xxxxx@btinternet.com", emailPass, "mail.btinternet.com")
-
-		// TLS config
-		tlsconfig := &tls.Config{
-			InsecureSkipVerify: true,
-			ServerName:         emailHost,
-		}
-
-		// need to call tls.Dial instead of smtp.Dial
-		// for smtp servers running on 465 that require an ssl connection
-		// from the very beginning (no starttls) (https://gist.github.com/chrisgillis/10888032)
-		conn, err := tls.Dial("tcp", emailServer, tlsconfig)
+		message, err := createEmailMessage(emailFrom, emailTo, r)
 		if err != nil {
-			log.Panic(err)
+			failureMsg := IntroData{Message: "Form was not successfully submitted. Please try again.", Error: true}
+			jsonData, _ := json.Marshal(failureMsg)
+			w.Write(jsonData)
+			return
 		}
 
-		c, err := smtp.NewClient(conn, emailHost)
+		err = email.Send(message)
 		if err != nil {
-			log.Panic(err)
+			failureMsg := IntroData{Message: "Form was not successfully submitted. Please try again.", Error: true}
+			jsonData, _ := json.Marshal(failureMsg)
+			w.Write(jsonData)
+			return
 		}
-
-		// Auth
-		if err = c.Auth(auth); err != nil {
-			log.Panic(err)
-		}
-
-		// To && From
-		if err = c.Mail(from.Address); err != nil {
-			log.Panic(err)
-		}
-
-		if err = c.Rcpt(to1.Address); err != nil {
-			log.Panic(err)
-		}
-
-		// Data
-		ew, err := c.Data()
-		if err != nil {
-			log.Panic(err)
-		}
-
-		_, err = ew.Write([]byte(emailMessage))
-		if err != nil {
-			log.Panic(err)
-		}
-
-		err = ew.Close()
-		if err != nil {
-			log.Panic(err)
-		}
-
-		c.Quit()
-
-		// TODO: store in database
-
-		// show the successful message
-		w.Header().Set("Content-Type", "application/json")
 
 		successMsg := IntroData{Message: "Thank you. Form was successfully submitted. I shall contact you shortly.", Error: false}
 		jsonData, err := json.Marshal(successMsg)
@@ -227,4 +159,36 @@ func main() {
 	if err := http.ListenAndServe(":80", nil); err != nil {
 		log.Fatal("Server problems: ", err)
 	}
+}
+
+// createEmailMessage ... creates complete email message to be sent across the wire
+func createEmailMessage(from string, to string, r *http.Request) (Message, error) {
+	err := r.ParseForm()
+
+	if err != nil {
+		log.Println(err)
+
+		return Message{}, err
+	}
+
+	fmt.Printf(">>> %+v\n\n", r.Form)
+
+	firstName := r.Form.Get("first_name")
+	lastName := r.Form.Get("last_name")
+	email := r.Form.Get("note")
+	note := r.Form.Get("note")
+
+	fmt.Printf("\t\tForm data : firstName=%s, lastName=%s,email=%s,note=%s\n", firstName, lastName, email, note)
+	subject := fmt.Sprintf("Guitar lessons interest (%s %s - %s)", firstName, lastName, email)
+
+	m := "First name: %s \r\nLast name: %s \r\n\r\nEmail: %s \r\n\r\nNote: %s\r\n"
+	body := fmt.Sprintf(m, firstName, lastName, email, note)
+
+	message := Message{
+		From:    from,
+		To:      to,
+		Subject: subject,
+		Body:    body,
+	}
+	return message, nil
 }
