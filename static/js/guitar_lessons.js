@@ -66,7 +66,7 @@ $(document).ready(function(){
 
 function initMap() {
 
-    var housePos = {lat: 51.748, lng: -0.297};
+    var housePos = {lat: 51.777, lng: -0.397};
     var map = new google.maps.Map(document.getElementById("map"), {
       zoom: 13,
       center: housePos
