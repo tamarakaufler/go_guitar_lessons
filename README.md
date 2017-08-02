@@ -31,14 +31,14 @@ starting the application.
 
 ## Usage
 
-a) change the email authentication detailsfirst:
-b) change the email recipient
-c) go build -o guitar_lessons
-d) Optional: change the server port
+1. change the email authentication detailsfirst:
+2. change the email recipient
+3. go build -o guitar_lessons
+4. Optional: change the server port
 
 ### CAVEAT
     if port < 1024 => the application needs to be started with root privileges or, if running as a normal user, the following command needs
     to be run first:
         sudo setcap CAP_NET_BIND_SERVICE=+eip /path/to/program
 
-e) export SMTP_pass=xxxxxxx && export GOOGLE_RECAPTCHA_KEY=yyyyyy && export GOOGLE_API_KEY=zzzzzz && export GOOGLE_RECAPTCHA_SECRET=qqqqqq && ./guitar_lessons > /dev/null 2>&1 &
+5. export SMTP_pass=xxxxxxx && export GOOGLE_RECAPTCHA_KEY=yyyyyy && export GOOGLE_API_KEY=zzzzzz && export GOOGLE_RECAPTCHA_SECRET=qqqqqq && ./guitar_lessons > /dev/null 2>&1 &
