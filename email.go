@@ -10,8 +10,8 @@ import (
 
 // Email ...
 type Email struct {
-	Client *smtp.Client
-	Auth   Auth
+	client *smtp.Client
+	auth   Auth
 }
 
 // Auth ... email authentication details
@@ -42,7 +42,7 @@ func (e *Email) Init(auth Auth) error {
 	if auth.Pass == "" {
 		return errors.New("Pass missing")
 	}
-	e.Auth = auth
+	e.auth = auth
 
 	if auth.Port == "465" {
 
@@ -71,7 +71,7 @@ func (e *Email) Init(auth Auth) error {
 			fmt.Printf("\t3 %v\n", err)
 			return err
 		}
-		e.Client = client
+		e.client = client
 
 	}
 
@@ -103,10 +103,10 @@ func (e *Email) Send(m Message) error {
 	// For email servers on port other than 465
 	//-----------------------------------------
 
-	if e.Auth.Port != "465" {
+	if e.auth.Port != "465" {
 
-		emailServer := fmt.Sprintf("%s:%s", e.Auth.Host, e.Auth.Port)
-		a := smtp.PlainAuth("", e.Auth.User, e.Auth.Pass, e.Auth.Host)
+		emailServer := fmt.Sprintf("%s:%s", e.auth.Host, e.auth.Port)
+		a := smtp.PlainAuth("", e.auth.User, e.auth.Pass, e.auth.Host)
 
 		err := smtp.SendMail(emailServer, a, m.From, []string{m.To}, []byte(message))
 		if err != nil {
@@ -122,15 +122,15 @@ func (e *Email) Send(m Message) error {
 
 	var err error
 
-	if err = e.Client.Mail(from.Address); err != nil {
+	if err = e.client.Mail(from.Address); err != nil {
 		return err
 	}
 
-	if err = e.Client.Rcpt(to.Address); err != nil {
+	if err = e.client.Rcpt(to.Address); err != nil {
 		return err
 	}
 
-	w, err := e.Client.Data()
+	w, err := e.client.Data()
 	if err != nil {
 		return err
 	}
