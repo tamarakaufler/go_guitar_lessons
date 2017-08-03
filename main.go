@@ -105,7 +105,7 @@ func main() {
 			jsonData, err := json.Marshal(failureMsg)
 
 			if err != nil {
-				fmt.Printf("contact handler error: %v \n\n", err)
+				fmt.Printf("1 error: %v \n\n", err)
 			}
 			w.Write(jsonData)
 			return
@@ -122,7 +122,7 @@ func main() {
 			jsonData, err := json.Marshal(failureMsg)
 
 			if err != nil {
-				fmt.Printf("contact handler error: %v \n\n", err)
+				fmt.Printf("2 error: %v \n\n", err)
 			}
 			w.Write(jsonData)
 			return
@@ -130,6 +130,8 @@ func main() {
 
 		message, err := createEmailMessage(emailFrom, emailTo, r)
 		if err != nil {
+			fmt.Printf("3 error: %v \n", err)
+
 			failureMsg := IntroData{Message: "Form was not successfully submitted. Please try again.", Error: true}
 			jsonData, _ := json.Marshal(failureMsg)
 			w.Write(jsonData)
@@ -138,6 +140,8 @@ func main() {
 
 		err = email.Send(message)
 		if err != nil {
+			fmt.Printf("4 error: %v \n", err)
+
 			failureMsg := IntroData{Message: "Form was not successfully submitted. Please try again.", Error: true}
 			jsonData, _ := json.Marshal(failureMsg)
 			w.Write(jsonData)
@@ -148,8 +152,9 @@ func main() {
 		jsonData, err := json.Marshal(successMsg)
 
 		if err != nil {
-			fmt.Printf("contact handler error: %v \n\n", err)
+			fmt.Printf("5 error: %v \n", err)
 		}
+
 		w.Write(jsonData)
 
 	})
@@ -166,7 +171,7 @@ func createEmailMessage(from string, to string, r *http.Request) (Message, error
 	err := r.ParseForm()
 
 	if err != nil {
-		log.Println(err)
+		log.Println("6 " + err.Error())
 
 		return Message{}, err
 	}

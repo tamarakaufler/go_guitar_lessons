@@ -11,6 +11,7 @@ import (
 // Email ...
 type Email struct {
 	Client *smtp.Client
+	Auth   Auth
 }
 
 // Auth ... email authentication details
@@ -41,11 +42,7 @@ func (e *Email) Init(auth Auth) error {
 	if auth.Pass == "" {
 		return errors.New("Pass missing")
 	}
-
-	emailServer := fmt.Sprintf("%s:%s", auth.Host, auth.Port)
-
-	var client *smtp.Client
-	var err error
+	e.Auth = auth
 
 	if auth.Port == "465" {
 
@@ -53,13 +50,16 @@ func (e *Email) Init(auth Auth) error {
 			InsecureSkipVerify: true,
 			ServerName:         auth.Host,
 		}
+
+		emailServer := fmt.Sprintf("%s:%s", auth.Host, auth.Port)
+
 		conn, err := tls.Dial("tcp", emailServer, tlsconfig)
 		if err != nil {
 			fmt.Printf("\t1 %v\n", err)
 			return err
 		}
 
-		client, err = smtp.NewClient(conn, auth.Host)
+		client, err := smtp.NewClient(conn, auth.Host)
 		if err != nil {
 			fmt.Printf("\t2 %v\n", err)
 			return err
@@ -71,21 +71,15 @@ func (e *Email) Init(auth Auth) error {
 			fmt.Printf("\t3 %v\n", err)
 			return err
 		}
+		e.Client = client
 
-	} else {
-		client, err = smtp.Dial(emailServer)
-		if err != nil {
-			fmt.Printf("\t%4 %v\n", err)
-			return err
-		}
 	}
-
-	e.Client = client
 
 	return nil
 }
 
 // Send ... sends email
+// distinguishes between emailservers on port 465 and the rest
 func (e *Email) Send(m Message) error {
 
 	from := mail.Address{"", m.From}
@@ -105,6 +99,26 @@ func (e *Email) Send(m Message) error {
 		message += fmt.Sprintf("%s: %s\r\n", k, v)
 	}
 	message += "\r\n" + body
+
+	// For email servers on port other than 465
+	//-----------------------------------------
+
+	if e.Auth.Port != "465" {
+
+		emailServer := fmt.Sprintf("%s:%s", e.Auth.Host, e.Auth.Port)
+		a := smtp.PlainAuth("", e.Auth.User, e.Auth.Pass, e.Auth.Host)
+
+		err := smtp.SendMail(emailServer, a, m.From, []string{m.To}, []byte(message))
+		if err != nil {
+			fmt.Printf("\t4 %v\n", err)
+			return err
+		}
+
+		return nil
+	}
+
+	// For email servers on port 465
+	//------------------------------
 
 	var err error
 
