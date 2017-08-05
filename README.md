@@ -37,7 +37,8 @@ starting the application.
 4. Optional: change the server port
 
 ### CAVEAT
-    if port < 1024 => the application needs to be started with root privileges or, if running as a normal user, the following command needs
+    if port < 1024 => the application needs to be started with root privileges or, 
+    if running as a normal user, the following command needs
     to be run first:
         sudo setcap CAP_NET_BIND_SERVICE=+eip /path/to/program
 
