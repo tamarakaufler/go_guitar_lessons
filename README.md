@@ -45,3 +45,8 @@ starting the application.
 ```
 export SMTP_pass=xxxxxxx && export GOOGLE_RECAPTCHA_KEY=yyyyyy && export GOOGLE_API_KEY=zzzzzz && export GOOGLE_RECAPTCHA_SECRET=qqqqqq && nohup ./guitar_lessons > /dev/null 2>&1 &
 ```
+
+## TODO
+
+- add tests
+- dockerize
