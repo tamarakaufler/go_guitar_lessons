@@ -41,4 +41,7 @@ starting the application.
     to be run first:
         sudo setcap CAP_NET_BIND_SERVICE=+eip /path/to/program
 
-5. export SMTP_pass=xxxxxxx && export GOOGLE_RECAPTCHA_KEY=yyyyyy && export GOOGLE_API_KEY=zzzzzz && export GOOGLE_RECAPTCHA_SECRET=qqqqqq && nohup ./guitar_lessons > /dev/null 2>&1 &
+5. start the application
+```
+export SMTP_pass=xxxxxxx && export GOOGLE_RECAPTCHA_KEY=yyyyyy && export GOOGLE_API_KEY=zzzzzz && export GOOGLE_RECAPTCHA_SECRET=qqqqqq && nohup ./guitar_lessons > /dev/null 2>&1 &
+```
