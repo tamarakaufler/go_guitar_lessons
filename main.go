@@ -15,9 +15,9 @@ var emailHost string = os.Getenv("SMTP_host")
 var emailPort string = os.Getenv("SMTP_port")
 var emailPass string = os.Getenv("SMTP_pass")
 
-var emailUser string = "xxxxx@btinternet.com"
+var emailUser string = "tkaufler@btinternet.com"
 var emailFrom string = "noreply@guitar-lessons.co.uk"
-var emailTo string = "xxxxx@gmail.com"
+var emailTo string = "tkaufler@gmail.com"
 
 var reCaptchaKey string = os.Getenv("GOOGLE_RECAPTCHA_KEY")
 var reCaptchaSecret string = os.Getenv("GOOGLE_RECAPTCHA_SECRET")
@@ -65,7 +65,7 @@ func main() {
 	}
 
 	if emailPass == "" {
-		log.Fatal("ERROR: email authentication (password) must be supplied for SMTP BTInternet server and xxxxx@btinternet.com")
+		log.Fatal("ERROR: email authentication (password) must be supplied for SMTP BTInternet server and tkaufler@btinternet.com")
 	}
 	if emailHost == "" {
 		emailHost = "mail.btinternet.com"
@@ -180,7 +180,7 @@ func createEmailMessage(from string, to string, r *http.Request) (Message, error
 
 	firstName := r.Form.Get("first_name")
 	lastName := r.Form.Get("last_name")
-	email := r.Form.Get("note")
+	email := r.Form.Get("email")
 	note := r.Form.Get("note")
 
 	fmt.Printf("\t\tForm data : firstName=%s, lastName=%s,email=%s,note=%s\n", firstName, lastName, email, note)
