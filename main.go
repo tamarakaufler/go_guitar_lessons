@@ -15,9 +15,9 @@ var emailHost string = os.Getenv("SMTP_host")
 var emailPort string = os.Getenv("SMTP_port")
 var emailPass string = os.Getenv("SMTP_pass")
 
-var emailUser string = "tkaufler@btinternet.com"
-var emailFrom string = "noreply@guitar-lessons.co.uk"
-var emailTo string = "tkaufler@gmail.com"
+var emailUser string = "user@yyy.com"
+var emailFrom string = "noreply@mysite.co.uk"
+var emailTo string = "musician@xxx.com"
 
 var reCaptchaKey string = os.Getenv("GOOGLE_RECAPTCHA_KEY")
 var reCaptchaSecret string = os.Getenv("GOOGLE_RECAPTCHA_SECRET")
