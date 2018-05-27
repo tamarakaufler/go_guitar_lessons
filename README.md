@@ -4,7 +4,7 @@ Website for advertising guitar tuition
 ## Synopsis
 
 The website has one main page, with tuition information, a Google map and a form for sending
-contact information. The form is protected by captcha to avoid spamming.
+queries or registering interest. The form is protected by captcha to avoid spamming.
 
 ## Technical details
 
